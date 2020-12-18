@@ -28,9 +28,9 @@ const CardEditForm = ({ card }) => {
 				value={company}
 			/>
 			<select className={styles.select} name='theme' value={theme}>
-				<option value='light'>Light</option>
-				<option value='dark'>Dark</option>
-				<option value='colorful'>Colorful</option>
+				<option value='light'>light</option>
+				<option value='dark'>dark</option>
+				<option value='colorful'>colorful</option>
 			</select>
 			<input className={styles.input} type='text' name='title' value={title} />
 			<input className={styles.input} type='text' name='email' value={email} />
@@ -42,7 +42,7 @@ const CardEditForm = ({ card }) => {
 			<div className={styles.fileInput}>
 				<ImageFileInput />
 			</div>
-			<Button name='Create' onClick={onSubmit} />
+			<Button name='Delete' onClick={onSubmit} />
 		</form>
 	);
 };
