@@ -6,42 +6,10 @@ import Header from '../header/header';
 import Preview from '../preview/preview';
 import styles from './maker.module.css';
 
-const Maker = ({ FileInput, authService }) => {
-	const [cards, setCards] = useState({
-		1: {
-			id: '1',
-			name: 'Grace',
-			company: 'Google',
-			theme: 'dark',
-			title: 'Web Developer',
-			email: 'grace@gmail.com',
-			message: 'go for it',
-			fileName: 'grace',
-			fileURL: null,
-		},
-		2: {
-			id: '2',
-			name: 'Grace222',
-			company: 'Google',
-			theme: 'light',
-			title: 'Web Developer',
-			email: 'grace222@gmail.com',
-			message: 'go for it',
-			fileName: 'grace222',
-			fileURL: null,
-		},
-		3: {
-			id: '3',
-			name: 'Grace333',
-			company: 'Google',
-			theme: 'colorful',
-			title: 'Web Developer',
-			email: 'grace333@gmail.com',
-			message: 'go for it',
-			fileName: 'grace333',
-			fileURL: 'grace333.png',
-		},
-	});
+const Maker = ({ FileInput, authService, cardRepository }) => {
+	const historyState = useHistory().state;
+	const [cards, setCards] = useState({});
+	const [userId, setUserId] = useState(historyState && historyState.id);
 
 	const history = useHistory();
 
@@ -50,8 +18,20 @@ const Maker = ({ FileInput, authService }) => {
 	};
 
 	useEffect(() => {
+		if (!userId) {
+			return;
+		}
+		const stopSync = cardRepository.syncCards(userId, (cards) => {
+			setCards(cards);
+		});
+		return () => stopSync();
+	}, [userId]);
+
+	useEffect(() => {
 		authService.onAuthChange((user) => {
-			if (!user) {
+			if (user) {
+				setUserId(user.uid);
+			} else {
 				history.push('/');
 			}
 		});
@@ -63,6 +43,7 @@ const Maker = ({ FileInput, authService }) => {
 			updated[card.id] = card;
 			return updated;
 		});
+		cardRepository.saveCard(userId, card);
 	};
 
 	const deleteCard = (card) => {
@@ -71,6 +52,7 @@ const Maker = ({ FileInput, authService }) => {
 			delete updated[card.id];
 			return updated;
 		});
+		cardRepository.removeCard(userId, card);
 	};
 
 	return (
