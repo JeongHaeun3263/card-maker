@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './footer.module.css';
 
-const Footer = () => (
+const Footer = memo(() => (
 	<footer className={styles.footer}>
 		<p className={styles.title}>
 			&copy; {new Date().getFullYear()} Grace Jeong. All rights reserved.{' '}
 		</p>
 	</footer>
-);
+));
 
 export default Footer;
